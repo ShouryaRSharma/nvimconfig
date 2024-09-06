@@ -1,6 +1,8 @@
 -- ~/.config/lvim/lua/user/utils.lua
 local M = {}
 
+local neotest = require("neotest")
+
 function M.get_python_path(workspace)
   workspace = workspace or vim.fn.getcwd()
 
@@ -29,14 +31,14 @@ end
 
 function M.run_all_tests()
   -- Run all found test files
-  require("neotest").run.run(vim.fn.getcwd())
+  neotest.run.run(vim.fn.getcwd())
   -- Open the output panel
-  require("neotest").output_panel.open()
+  neotest.output_panel.open()
 end
 
 function M.run_test_with_output(args)
-  require("neotest").run.run(args)
-  require("neotest").output_panel.open()
+  neotest.run.run(args)
+  neotest.output_panel.open()
 end
 
 return M

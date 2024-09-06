@@ -7,11 +7,89 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 lvim.plugins = {
-  { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
+  {
+    "Pocco81/auto-save.nvim",
+    config = function()
+      require("auto-save").setup()
+    end,
+  },
+  {
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" }
+  },
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    }
+  },
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000
+  },
   {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
     event = "insertenter",
+  },
+  {
+    "nvim-java/nvim-java",
+    dependencies = {
+      "neovim/nvim-lspconfig",
+      'nvim-java/lua-async-await',
+      'nvim-java/nvim-java-refactor',
+      'nvim-java/nvim-java-core',
+      'nvim-java/nvim-java-test',
+      'nvim-java/nvim-java-dap',
+      'MunifTanjim/nui.nvim',
+      'neovim/nvim-lspconfig',
+      'mfussenegger/nvim-dap',
+      {
+        'JavaHello/spring-boot.nvim',
+        commit = '218c0c26c14d99feca778e4d13f5ec3e8b1b60f0',
+      },
+      {
+        'williamboman/mason.nvim',
+        opts = {
+          registries = {
+            'github:nvim-java/mason-registry',
+            'github:mason-org/mason-registry',
+          },
+        },
+      },
+      opts = {
+        servers = {
+          jdtls = {
+            settings = {
+              java = {
+                configuration = {
+                  runtimes = {
+                    {
+                      name = "JavaSE-17",
+                      path = "/opt/homebrew/opt/openjdk@17/bin/java",
+                      default = true
+                    },
+                    {
+                      name = "JavaSE-11",
+                      path = "/opt/homebrew/opt/openjdk@11/bin/java",
+                    }
+                  }
+                }
+              },
+            },
+          },
+        },
+        setup = {
+          jdtls = function()
+            require("java").setup()
+          end,
+        },
+      },
+    },
   },
   {
     "zbirenbaum/copilot-cmp",
@@ -29,10 +107,6 @@ lvim.plugins = {
     dependencies = "nvim-treesitter/nvim-treesitter",
   },
   {
-    "mfussenegger/nvim-jdtls",
-    ft = "java",
-  },
-  {
     "mfussenegger/nvim-dap-python",
   },
   {
@@ -41,8 +115,7 @@ lvim.plugins = {
     cmd = "Neogit",
     config = function()
       require("neogit").setup({
-        integrations = {
-          diffview = true
+        integrations = { diffview = true
         }
       })
     end
@@ -63,13 +136,93 @@ lvim.plugins = {
     "hdiniz/vim-gradle",
     ft = {"gradle", "groovy"},
   },
+  {
+    "mbbill/undotree"
+  },
+  {
+    "folke/trouble.nvim",
+    opts = {}, -- for default options, refer to the configuration section for custom setup.
+    cmd = "Trouble",
+    keys = {
+    },
+  },
+  {
+    "scottmckendry/cyberdream.nvim",
+    lazy = false,
+    priority = 1000,
+  }
 }
 
+require("cyberdream").setup({
+  transparent = true,
+  italic_comments = true,
+  hide_fillchars = true,
+  borderless_telescope = true,
+})
+
+require("notify").setup({
+  background_colour = "#000000",
+})
+
+require("noice").setup({
+  lsp = {
+    -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+    override = {
+      ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+      ["vim.lsp.util.stylize_markdown"] = true,
+      ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+    },
+    progress = {
+      enabled = false
+    }
+  },
+  -- you can enable a preset for easier configuration
+  presets = {
+    bottom_search = false, -- use a classic bottom cmdline for search
+    command_palette = true, -- position the cmdline and popupmenu together
+    long_message_to_split = false, -- long messages will be sent to a split
+    inc_rename = true, -- enables an input dialog for inc-rename.nvim
+    lsp_doc_border = false, -- add a border to hover docs and signature help
+  },
+})
+
 -- Colour Scheme
-lvim.colorscheme = "tokyonight"
-vim.g.tokyonight_style = "storm" -- Other options: "night", "day"
-vim.g.tokyonight_italic_functions = true
-vim.g.tokyonight_sidebars = { "qf", "vista_kind", "terminal", "packer" }
+lvim.colorscheme = "cyberdream"
+
+lvim.builtin.telescope.defaults = {
+  layout_strategy = "horizontal",
+  layout_config = {
+    horizontal = {
+      prompt_position = "top",
+      preview_width = 0.55,
+      results_width = 0.8,
+    },
+    vertical = {
+      mirror = false,
+    },
+    width = 0.87,
+    height = 0.80,
+    preview_cutoff = 120,
+  },
+  border = false,
+  borderchars = {
+    prompt = { " ", " ", " ", " ", " ", " ", " ", " " },
+    results = { " ", " ", " ", " ", " ", " ", " ", " " },
+    preview = { " ", " ", " ", " ", " ", " ", " ", " " },
+  },
+}
+
+lvim.builtin.telescope.pickers = {
+  find_files = {
+    theme = "dropdown",
+    borderchars = {
+      prompt = { " ", " ", " ", " ", " ", " ", " ", " " },
+      results = { " ", " ", " ", " ", " ", " ", " ", " " },
+      preview = { " ", " ", " ", " ", " ", " ", " ", " " },
+    },
+  },
+  -- Add more pickers here if needed
+}
 
 -- Treesitter closing
 lvim.builtin.treesitter.textobjects = {
@@ -82,7 +235,6 @@ lvim.builtin.treesitter.textobjects = {
     },
   },
 }
-
 lvim.builtin.treesitter.ensure_installed = {
   "java",
   "python",
@@ -91,6 +243,51 @@ lvim.builtin.treesitter.highlight.enable = true
 
 lvim.builtin.treesitter.folding = {
   enable = true
+}
+
+local which_key = lvim.builtin.which_key.mappings
+local existing_s_mappings = which_key["s"] or {}
+existing_s_mappings["z"] = {"<cmd>UndotreeToggle<cr>", "Undo Tree"}
+which_key["s"] = existing_s_mappings
+which_key["x"] = {
+  name = "Trouble",
+  x = { "<cmd>Trouble diagnostics toggle<cr>", "Toggle Diagnostics" },
+  X = { "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", "Toggle Buffer Diagnostics" },
+  L = { "<cmd>Trouble loclist toggle<cr>", "Toggle Location List" },
+  Q = { "<cmd>Trouble qflist toggle<cr>", "Toggle Quickfix List" },
+}
+
+lvim.builtin.which_key.mappings = which_key
+
+-- Python refactoring
+lvim.builtin.which_key.mappings["r"] = {
+  name = "Refactor",
+  r = { "<cmd>lua vim.lsp.buf.rename()<cr>", "Rename" },
+  a = { "<cmd>lua vim.lsp.buf.code_action()<cr>", "Code Action" },
+  e = { function()
+    vim.lsp.buf.code_action({
+      context = {
+        only = { "refactor.extract" },
+        diagnostics = {},
+      },
+    })
+  end, "Extract", mode = "v" },
+  i = { function()
+    vim.lsp.buf.code_action({
+      context = {
+        only = { "refactor.inline" },
+        diagnostics = {},
+      },
+    })
+  end, "Inline" },
+  o = { function()
+    vim.lsp.buf.code_action({
+      context = {
+        only = { "source.organizeImports" },
+        diagnostics = {},
+      },
+    })
+  end, "Organize Imports" },
 }
 
 -- Github Copilot
@@ -132,76 +329,6 @@ function _G.set_terminal_keymaps()
   vim.keymap.set('t', '<c-l>', [[<cmd>wincmd l<cr>]], term_opts)
 end
 
--- autocommand to set terminal keymaps when entering terminal mode
-vim.cmd('autocmd! termopen term://* lua set_terminal_keymaps()')
-
--- Autosave configuration
-local autosave = vim.api.nvim_create_augroup("autosave", { clear = true })
-
--- Global variable to control autosave
-vim.g.autosave_enabled = true
-
--- Function to toggle autosave
-function ToggleAutosave()
-  vim.g.autosave_enabled = not vim.g.autosave_enabled
-  if vim.g.autosave_enabled then
-    vim.api.nvim_echo({{"Autosave enabled", "MoreMsg"}}, false, {})
-  else
-    vim.api.nvim_echo({{"Autosave disabled", "WarningMsg"}}, false, {})
-  end
-end
-
--- Command to toggle autosave
-vim.api.nvim_create_user_command("ToggleAutosave", ToggleAutosave, {})
-
--- Function to check if the current file is the Neovim config
-local function is_config_file()
-  local config_path = vim.fn.stdpath("config")
-  local current_file = vim.fn.expand("%:p")
-  return vim.startswith(current_file, config_path)
-end
-
--- Autosave function
-local function autosave_handler()
-  if not vim.g.autosave_enabled then return end
-  local timer = vim.loop.new_timer()
-  timer:start(150, 0, vim.schedule_wrap(function()
-    if vim.bo.modified and not vim.bo.readonly and vim.fn.expand("%") ~= "" and not is_config_file() then
-      vim.cmd("silent! write")
-      vim.api.nvim_echo({{"File autosaved", "MoreMsg"}}, false, {})
-    end
-    timer:close()  -- Always close the timer to prevent memory leaks
-  end))
-end
-
--- Set up autocommands for autosave
-vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI" }, {
-  group = autosave,
-  pattern = "*",
-  callback = autosave_handler,
-})
-
--- Disable autosave for certain filetypes
-vim.api.nvim_create_autocmd("FileType", {
-  group = autosave,
-  pattern = { "neo-tree", "TelescopePrompt", "toggleterm", "Trouble", "lazy", "packer", "notify" },
-  callback = function()
-    vim.b.noautosave = true
-  end,
-})
-
--- Disable autosave for files in certain directories
-vim.api.nvim_create_autocmd("BufNewFile", {
-  group = autosave,
-  pattern = "/tmp/*",
-  callback = function()
-    vim.b.noautosave = true
-  end,
-})
-
--- Optional: add a keybinding to toggle autosave
-lvim.keys.normal_mode["<leader>ta"] = ":ToggleAutosave<CR>"
-
 lvim.builtin.telescope.defaults = {
   wrap_results = true,
 }
@@ -235,41 +362,6 @@ pcall(function()
  require("dap-python").setup(mason_path .. "packages/debugpy/venv/bin/python")
 end)
 
--- Configure DAP for Java debugging
-dap.configurations.java = {
-  {
-    type = 'java';
-    request = 'attach';
-    name = "Debug (Attach) - Remote";
-    hostName = "127.0.0.1";
-    port = 5005;
-  },
-}
-
--- Setup DAP for Java
-local function setup_dap_java()
-  require('jdtls').setup_dap({ hotcodereplace = 'auto' })
-  require('jdtls.dap').setup_dap_main_class_configs()
-end
-
--- Call setup_dap_java after JDTLS is attached
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "java",
-  callback = function()
-    local bufnr = vim.api.nvim_get_current_buf()
-    local client = vim.lsp.get_active_clients({bufnr = bufnr, name = "jdtls"})[1]
-    if client then
-      setup_dap_java()
-    end
-  end,
-})
-
--- Configure Java formatting
-local formatters = require "lvim.lsp.null-ls.formatters"
-formatters.setup {
-  { command = "google_java_format", filetypes = { "java" } },
-}
-
 -- Add gradle-specific configuration
 vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
   pattern = {"*.gradle", "*.gradle.kts"},
@@ -278,13 +370,6 @@ vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
   end,
 })
 
--- Disable pyright in favor of pylsp
-vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "pyright" })
-
--- Ensure pylsp is the only Python LSP
-lvim.lsp.automatic_configuration.skipped_servers = vim.tbl_filter(function(server)
-  return server ~= "pylsp"
-end, lvim.lsp.automatic_configuration.skipped_servers)
 -- Configure pylsp 
 local lspconfig = require("lspconfig")
 
@@ -313,6 +398,7 @@ lspconfig.pylsp.setup({
           completions = { enabled = true },
           code_actions = { enabled = true },
         },
+        rope_rename = { enabled = true },
         -- Enable Jedi for completions and other features
         jedi_completion = {
           enabled = true,
@@ -322,6 +408,11 @@ lspconfig.pylsp.setup({
         jedi_references = { enabled = true },
         jedi_signature_help = { enabled = true },
         jedi_symbols = { enabled = true },
+        pylsp_mypy = { enabled = true },
+        mypy = {
+          enabled = true,
+          live_mode = true,
+        },
       }
     }
   }
@@ -349,24 +440,21 @@ require("neotest").setup({
   }
 })
 
-lvim.builtin.which_key.mappings["d"]["]"] = {
-  name = "Testing",
-  p = {
-    name = "Python",
-    m = { function() utils.run_test_with_output() end, "Test Method" },
-    M = { function() utils.run_test_with_output({strategy = "dap"}) end, "Test Method DAP" },
-    f = { function() utils.run_test_with_output(vim.fn.expand('%')) end, "Test File" },
-    F = { function() utils.run_test_with_output({vim.fn.expand('%'), strategy = "dap"}) end, "Test File DAP" },
-    a = { utils.run_all_tests, "Test All" },
+local existing_d_mappings = lvim.builtin.which_key.mappings["d"] or {}
+local testing_mappings = {
+  T = {
+    name = "Python Test",
+    m = { function() utils.run_test_with_output() end, "Method" },
+    f = { function() utils.run_test_with_output(vim.fn.expand('%')) end, "File" },
+    a = { utils.run_all_tests, "All" },
+    d = { function() utils.run_test_with_output({strategy = "dap"}) end, "Method (DAP)" },
+    D = { function() utils.run_test_with_output({vim.fn.expand('%'), strategy = "dap"}) end, "File (DAP)" },
   },
-  j = {
-    name = "Java",
-    s = { "<cmd>lua require'jdtls'.test_class()<CR>", "Test Class" },
-    m = { "<cmd>lua require'jdtls'.test_nearest_method()<CR>", "Test Method" },
-  },
-  S = { "<cmd>lua require('neotest').summary.toggle()<cr>", "Test Summary" },
-  O = { "<cmd>lua require('neotest').output_panel.toggle()<cr>", "Toggle Output Panel" },
+  S = { require('neotest').summary.toggle, "Test Summary" },
+  O = { require('neotest').output_panel.toggle, "Output Panel" },
 }
+local merged_mappings = vim.tbl_deep_extend("force", existing_d_mappings, testing_mappings)
+lvim.builtin.which_key.mappings["d"] = merged_mappings
 
 function _G.code_action_with_import_priority()
   local actions = vim.lsp.buf.code_action()
@@ -394,61 +482,73 @@ end
 lvim.keys.normal_mode["<M-CR>"] = ":lua _G.code_action_with_import_priority()<CR>"
 lvim.keys.insert_mode["<M-CR>"] = "<C-O>:lua _G.code_action_with_import_priority()<CR>"
 
--- Java-specific LSP settings
-lvim.lsp.automatic_configuration.skipped_servers = vim.tbl_filter(function(server)
-  return server ~= "jdtls"
-end, lvim.lsp.automatic_configuration.skipped_servers)
+local harpoon = require("harpoon")
 
+-- REQUIRED
+harpoon:setup()
+-- REQUIRED
 
-local java_on_attach = function(client, bufnr)
+vim.keymap.set("n", "<leader>a", function() harpoon:list():add() end)
+vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
 
-  -- Set up your Java-specific mappings here
-  local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-  local opts = { noremap=true, silent=true }
+vim.keymap.set("n", "<C-h>", function() harpoon:list():select(1) end)
+vim.keymap.set("n", "<C-t>", function() harpoon:list():select(2) end)
+vim.keymap.set("n", "<C-n>", function() harpoon:list():select(3) end)
+vim.keymap.set("n", "<C-s>", function() harpoon:list():select(4) end)
 
-  buf_set_keymap("n", "<leader>Jo", "<cmd>lua require'jdtls'.organize_imports()<CR>", opts)
-  buf_set_keymap("n", "<leader>Jv", "<cmd>lua require('jdtls').extract_variable()<CR>", opts)
-  buf_set_keymap("n", "<leader>Jc", "<cmd>lua require('jdtls').extract_constant()<CR>", opts)
-  buf_set_keymap("n", "<leader>Jt", "<cmd>lua require'jdtls'.test_nearest_method()<CR>", opts)
-  buf_set_keymap("n", "<leader>JT", "<cmd>lua require'jdtls'.test_class()<CR>", opts)
-  buf_set_keymap("n", "<leader>Ju", "<cmd>JdtUpdateConfig<CR>", opts)
+-- Toggle previous & next buffers stored within Harpoon list
+vim.keymap.set("n", "<C-S-P>", function() harpoon:list():prev() end)
+vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)
 
-  buf_set_keymap("v", "<leader>Jv", "<esc><cmd>lua require('jdtls').extract_variable(true)<CR>", opts)
-  buf_set_keymap("v", "<leader>Jc", "<esc><cmd>lua require('jdtls').extract_constant(true)<CR>", opts)
-  buf_set_keymap("v", "<leader>Jm", "<esc><cmd>lua require('jdtls').extract_method(true)<CR>", opts)
+local function toggle_telescope(harpoon_files)
+    local finder = function()
+        local paths = {}
+        for _, item in ipairs(harpoon_files.items) do
+            table.insert(paths, item.value)
+        end
 
-  -- Manually add the which-key group for Java
-  local status_ok, which_key = pcall(require, "which-key")
-  if status_ok then
-    local mappings = {
-      J = {
-        name = "Java",
-        o = "Organize Imports",
-        v = "Extract Variable",
-        c = "Extract Constant",
-        t = "Test Method",
-        T = "Test Class",
-        u = "Update Config",
-        m = "Extract Method",
-      },
-    }
-    local opts = {
-      mode = "n", -- Normal mode
-      prefix = "<leader>",
-      buffer = bufnr, -- Local to buffer
-      silent = true,
-      noremap = true,
-      nowait = true,
-    }
-    which_key.register(mappings, opts)
-  end
+        return require("telescope.finders").new_table({
+            results = paths,
+            entry_maker = function(entry)
+                return {
+                    value = entry,
+                    display = entry,
+                    ordinal = entry,
+                    filename = vim.fn.expand(entry), -- Ensure it's the absolute path
+                }
+            end,
+        })
+    end
 
-  vim.notify("Java environment setup complete", vim.log.levels.INFO)
+    require("telescope.pickers").new({}, {
+        prompt_title = "Harpoon",
+        finder = finder(),
+        previewer = require("telescope.previewers").vim_buffer_cat.new({
+            -- This allows for Tree-sitter syntax highlighting
+            get_buffer_by_name = function(_, entry)
+                return entry.filename
+            end,
+        }),
+        sorter = require("telescope.config").values.generic_sorter({}),
+        layout_config = {
+            height = 0.6,
+            width = 0.8,
+            prompt_position = "top",
+            preview_cutoff = 20,
+        },
+        attach_mappings = function(prompt_bufnr, map)
+            map("i", "<C-d>", function()
+                local state = require("telescope.actions.state")
+                local selected_entry = state.get_selected_entry()
+                local current_picker = state.get_current_picker(prompt_bufnr)
+
+                table.remove(harpoon_files.items, selected_entry.index)
+                current_picker:refresh(finder())
+            end)
+            return true
+        end,
+    }):find()
 end
 
-lvim.lsp.on_attach_callback = function(client, bufnr)
-  if client.name == "jdtls" then
-    java_on_attach(client, bufnr)
-  end
-end
-
+vim.keymap.set("n", "<C-e>", function() toggle_telescope(harpoon:list()) end,
+    { desc = "Open harpoon window with preview" })
