@@ -72,8 +72,7 @@ lvim.plugins = {
                       name = "JavaSE-17",
                       path = "/opt/homebrew/opt/openjdk@17/bin/java",
                       default = true
-                    },
-                    {
+                    }, {
                       name = "JavaSE-11",
                       path = "/opt/homebrew/opt/openjdk@11/bin/java",
                     }
@@ -150,7 +149,50 @@ lvim.plugins = {
     "scottmckendry/cyberdream.nvim",
     lazy = false,
     priority = 1000,
+  },
+  {
+    "harrisoncramer/gitlab.nvim",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "nvim-lua/plenary.nvim",
+      "sindrets/diffview.nvim",
+      "stevearc/dressing.nvim", -- Recommended but not required. Better UI for pickers.
+      "nvim-tree/nvim-web-devicons" -- Recommended but not required. Icons in discussion tree.
+    },
+    enabled = true,
+    build = function () require("gitlab.server").build(true) end, -- Builds the Go binary
+    config = function()
+      require("gitlab").setup()
+    end,
   }
+}
+
+-- First, set up the custom highlight group
+vim.api.nvim_create_autocmd("ColorScheme", {
+  pattern = "*",
+  callback = function()
+    vim.api.nvim_set_hl(0, 'CustomGitBlame', {fg = '#BBBBBB', italic = true, default = true})
+  end,
+})
+
+-- Then, configure GitSigns with the custom formatter
+lvim.builtin.gitsigns.opts = {
+  current_line_blame = true,
+  current_line_blame_opts = {
+    virt_text = true,
+    virt_text_pos = 'eol',
+    delay = 0,
+  },
+  current_line_blame_formatter = function(name, blame_info)
+    local author = blame_info.author == name and "You" or blame_info.author
+    local text = string.format(
+      '%s, %s - %s',
+      author,
+      os.date('%Y-%m-%d', tonumber(blame_info.author_time)),
+      blame_info.summary
+    )
+    return {{text, 'CustomGitBlame'}}
+  end,
 }
 
 require("cyberdream").setup({
@@ -162,7 +204,16 @@ require("cyberdream").setup({
 
 require("notify").setup({
   background_colour = "#000000",
+  render = "minimal",
+	stages = "fade_in_slide_out",
+	on_open = function(win)
+		vim.api.nvim_win_set_config(win, { focusable = false })
+	end,
 })
+
+vim.keymap.set("n", "<Esc>", function()
+	require("notify").dismiss()
+end, { desc = "dismiss notify popup and clear hlsearch" })
 
 require("noice").setup({
   lsp = {
@@ -180,9 +231,9 @@ require("noice").setup({
   presets = {
     bottom_search = false, -- use a classic bottom cmdline for search
     command_palette = true, -- position the cmdline and popupmenu together
-    long_message_to_split = false, -- long messages will be sent to a split
+    long_message_to_split = true, -- long messages will be sent to a split
     inc_rename = true, -- enables an input dialog for inc-rename.nvim
-    lsp_doc_border = false, -- add a border to hover docs and signature help
+    lsp_doc_border = true, -- add a border to hover docs and signature help
   },
 })
 
@@ -221,7 +272,6 @@ lvim.builtin.telescope.pickers = {
       preview = { " ", " ", " ", " ", " ", " ", " ", " " },
     },
   },
-  -- Add more pickers here if needed
 }
 
 -- Treesitter closing
@@ -372,6 +422,8 @@ vim.api.nvim_create_autocmd({"BufEnter", "BufWinEnter"}, {
 
 -- Configure pylsp 
 local lspconfig = require("lspconfig")
+
+lspconfig.jdtls.setup({})
 
 lspconfig.pylsp.setup({
   settings = {
