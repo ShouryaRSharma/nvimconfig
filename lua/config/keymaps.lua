@@ -5,3 +5,10 @@ local keymap = vim.keymap
 
 -- Add Neogit keymap
 keymap.set("n", "<leader>gN", "<cmd>Neogit<CR>", { desc = "Open Neogit" })
+
+-- Add Neotest keymap to run all tests and open output panel
+keymap.set("n", "<leader>tT", function()
+  local neotest = require("neotest")
+  neotest.run.run(vim.fn.getcwd())
+  neotest.output_panel.open()
+end, { desc = "Run all tests and open output panel" })
