@@ -13,9 +13,13 @@ keymap.set("n", "<leader>tT", function()
   neotest.output_panel.open()
 end, { desc = "Run all tests and open output panel" })
 
+-- Add keymap to toggle Kubectl plugin
 keymap.set(
   "n",
   "<leader>k",
   '<cmd>lua require("kubectl").toggle()<cr>',
   { noremap = true, silent = true, desc = "Toggle Kubectl" }
 )
+
+-- Add keymap to open Dashboard with <leader>a keymap
+keymap.set("n", "<leader>a", "<cmd>Dashboard<CR>", { desc = "Open Dashboard" })
