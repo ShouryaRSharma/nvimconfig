@@ -26,3 +26,7 @@ keymap.set("n", "<leader>a", "<cmd>Dashboard<CR>", { desc = "Open Dashboard" })
 
 -- Add keymap to launch LazyDocker
 keymap.set("n", "<leader>cD", "<cmd>LazyDocker<CR>", { desc = "Launch LazyDocker" })
+
+-- Add paste without overwriting register mappings
+keymap.set("x", "p", '"_dP', { noremap = true, desc = "Paste without overwriting register" })
+keymap.set("x", "P", '"_dP', { noremap = true, desc = "Paste without overwriting register" })
