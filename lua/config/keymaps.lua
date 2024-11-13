@@ -22,7 +22,7 @@ keymap.set(
 )
 
 -- Add keymap to open Dashboard with <leader>a keymap
-keymap.set("n", "<leader>a", "<cmd>Dashboard<CR>", { desc = "Open Dashboard" })
+keymap.set("n", "<leader>;", "<cmd>Dashboard<CR>", { desc = "Open Dashboard" })
 
 -- Add keymap to launch LazyDocker
 keymap.set("n", "<leader>cD", "<cmd>LazyDocker<CR>", { desc = "Launch LazyDocker" })
