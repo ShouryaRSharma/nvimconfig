@@ -8,7 +8,7 @@ return {
       provider = "vertex",
       auto_suggestions_provider = "vertex",
       vertex = {
-        model = "gemini-1.5-flash-002",
+        model = "gemini-1.5-pro-002",
       },
     },
     build = "make",
