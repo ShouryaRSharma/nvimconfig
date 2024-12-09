@@ -13,6 +13,19 @@ keymap.set("n", "<leader>tT", function()
   neotest.output_panel.open()
 end, { desc = "Run all tests and open output panel" })
 
+-- nvim-coverage keymaps
+keymap.set("n", "<leader>ct", function()
+  require("coverage").toggle()
+end, { desc = "Toggle coverage" })
+
+keymap.set("n", "<leader>cs", function()
+  require("coverage").summary()
+end, { desc = "Coverage summary" })
+
+keymap.set("n", "<leader>cL", function()
+  require("coverage").load(true)
+end, { desc = "Coverage load" })
+
 -- Add keymap to toggle Kubectl plugin
 keymap.set(
   "n",
