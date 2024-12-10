@@ -3,10 +3,11 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
+        -- Disable the default pyright
         -- pyright = false,
+
         -- Configure basedpyright
         basedpyright = {
-          mason = {},
           settings = {
             python = {
               analysis = {
@@ -19,6 +20,7 @@ return {
               },
             },
           },
+          -- You can customize the basedpyright setup further here
           filetypes = { "python" },
           single_file_support = true,
         },

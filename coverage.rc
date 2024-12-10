@@ -1,0 +1,2 @@
+[run]
+omit = */nvim/lazy/neotest-python/*

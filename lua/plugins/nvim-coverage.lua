@@ -30,7 +30,11 @@ return {
     opts = {
       adapters = {
         ["neotest-python"] = {
-          args = { "--cov", "--cov-report=xml" },
+          args = {
+            "--cov",
+            "--cov-report=term-missing",
+            "--cov-config=" .. vim.fn.expand("~/.config/nvim/coverage.rc"),
+          },
         },
       },
     },
