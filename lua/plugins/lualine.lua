@@ -9,9 +9,16 @@ return {
         return msg
       end
       local buf_client_names = {}
+      local ft = vim.bo.filetype
       for _, client in pairs(buf_clients) do
-        if client.name ~= "null-ls" and client.name ~= "copilot" then
-          table.insert(buf_client_names, client.name)
+        -- Skip copilot, null-ls, and jdtls if not in java file
+        if client.name ~= "null-ls" and client.name ~= "copilot" and not (client.name == "jdtls" and ft ~= "java") then
+          -- Rename sonarlint.nvim to just sonarlint
+          local name = client.name
+          if name == "sonarlint.nvim" then
+            name = "sonarlint"
+          end
+          table.insert(buf_client_names, name)
         end
       end
       -- Add null-ls sources
