@@ -4,23 +4,22 @@ return {
     opts = {
       servers = {
         -- Disable the default pyright
-        -- pyright = false,
-
+        pyright = {
+          enabled = false,
+        },
         -- Configure basedpyright
         basedpyright = {
+          enabled = true,
           settings = {
-            python = {
-              analysis = {
-                typeCheckingMode = "standard",
-                autoSearchPaths = true,
-                useLibraryCodeForTypes = true,
-                diagnosticMode = "workspace",
-                autoImportCompletions = true,
-                disableOrganizeImports = true,
-              },
+            basedpyright = {
+              typeCheckingMode = "basic",
+              autoSearchPaths = true,
+              useLibraryCodeForTypes = true,
+              diagnosticMode = "workspace",
+              autoImportCompletions = true,
+              disableOrganizeImports = true,
             },
           },
-          -- You can customize the basedpyright setup further here
           filetypes = { "python" },
           single_file_support = true,
         },
