@@ -3,6 +3,13 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
+        jdtls = {
+          -- Disable formatting capability for jdtls
+          on_attach = function(client, bufnr)
+            client.server_capabilities.documentFormattingProvider = false
+            client.server_capabilities.documentRangeFormattingProvider = false
+          end,
+        },
         -- Disable the default pyright
         pyright = {
           enabled = false,
