@@ -6,26 +6,6 @@ local keymap = vim.keymap
 -- Add Neogit keymap
 keymap.set("n", "<leader>gN", "<cmd>Neogit<CR>", { desc = "Open Neogit" })
 
--- Add Neotest keymap to run all tests and open output panel
-keymap.set("n", "<leader>tT", function()
-  local neotest = require("neotest")
-  neotest.run.run(vim.fn.getcwd())
-  neotest.output_panel.open()
-end, { desc = "Run all tests and open output panel" })
-
--- nvim-coverage keymaps
-keymap.set("n", "<leader>ct", function()
-  require("coverage").toggle()
-end, { desc = "Toggle coverage" })
-
-keymap.set("n", "<leader>cs", function()
-  require("coverage").summary()
-end, { desc = "Coverage summary" })
-
-keymap.set("n", "<leader>cL", function()
-  require("coverage").load(true)
-end, { desc = "Coverage load" })
-
 -- Add keymap to toggle Kubectl plugin
 keymap.set(
   "n",
@@ -35,11 +15,15 @@ keymap.set(
 )
 
 -- Add keymap to open Dashboard with <leader>a keymap
-keymap.set("n", "<leader>;", "<cmd>Dashboard<CR>", { desc = "Open Dashboard" })
+keymap.set("n", "<leader>a", "<cmd>Dashboard<CR>", { desc = "Open Dashboard" })
 
 -- Add keymap to launch LazyDocker
 keymap.set("n", "<leader>cD", "<cmd>LazyDocker<CR>", { desc = "Launch LazyDocker" })
 
--- Add paste without overwriting register mappings
-keymap.set("x", "p", '"_dP', { noremap = true, desc = "Paste without overwriting register" })
-keymap.set("x", "P", '"_dP', { noremap = true, desc = "Paste without overwriting register" })
+-- Load coverage report
+keymap.set("n", "<leader>cL", function()
+  vim.cmd("CoverageLoad")
+end, { desc = "Load coverage" })
+keymap.set("n", "<leader>ct", function()
+  vim.cmd("CoverageToggle")
+end, { desc = "Toggle coverage" })

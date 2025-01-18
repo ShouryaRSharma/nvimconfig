@@ -27,15 +27,47 @@ return {
     dependencies = {
       "nvim-neotest/neotest-python",
     },
-    opts = {
-      adapters = {
-        ["neotest-python"] = {
-          args = {
-            "--cov",
-            "--cov-report=term-missing",
-            "--cov-config=" .. vim.fn.expand("~/.config/nvim/coverage.rc"),
-          },
-        },
+    keys = {
+      {
+        "<leader>tT",
+        function()
+          local neotest = require("neotest")
+
+          local function is_python_environment()
+            if vim.env.VIRTUAL_ENV or vim.fn.glob("venv") ~= "" then
+              return true
+            end
+
+            local python_files = { "pyproject.toml", "requirements.txt", "setup.py" }
+            for _, file in ipairs(python_files) do
+              if vim.fn.glob(file) ~= "" then
+                return true
+              end
+            end
+
+            return false
+          end
+
+          if is_python_environment() then
+            neotest.run.run({
+              extra_args = {
+                "--cov",
+                "--cov-report=term-missing",
+                "--cov-config=" .. vim.fn.expand("~/.config/nvim/coverage.rc"),
+              },
+              suite = true,
+              cwd = vim.fn.getcwd(),
+            })
+          else
+            neotest.run.run({
+              suite = true,
+              cwd = vim.fn.getcwd(),
+            })
+          end
+
+          neotest.summary.open()
+        end,
+        desc = "Run all tests with coverage",
       },
     },
   },
