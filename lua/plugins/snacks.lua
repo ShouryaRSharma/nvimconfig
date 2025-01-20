@@ -4,5 +4,12 @@ return {
   lazy = false,
   opts = {
     scroll = { enabled = false },
+    bigfile = { enabled = true },
+    dashboard = { enabled = true },
+    indent = { enabled = true },
+    quickfile = { enabled = true },
+    statuscolumn = { enabled = true },
+    words = { enabled = true },
+    picker = { enabled = true },
   },
 }
