@@ -12,7 +12,12 @@ return {
       local ft = vim.bo.filetype
       for _, client in pairs(buf_clients) do
         -- Skip copilot, null-ls, and jdtls if not in java file
-        if client.name ~= "null-ls" and client.name ~= "copilot" and not (client.name == "jdtls" and ft ~= "java") then
+        if
+          client.name ~= "prettier"
+          and client.name ~= "null-ls"
+          and client.name ~= "copilot"
+          and not (client.name == "jdtls" and ft ~= "java")
+        then
           -- Rename sonarlint.nvim to just sonarlint
           local name = client.name
           if name == "sonarlint.nvim" then
