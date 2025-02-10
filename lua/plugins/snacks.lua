@@ -10,56 +10,25 @@ return {
     quickfile = { enabled = true },
     statuscolumn = { enabled = true },
     words = { enabled = true },
+    explorer = {
+      enabled = true,
+      hidden = true,
+    },
     picker = {
       enabled = true,
+      files = {
+        hidden = true,
+      },
       sources = {
         files = {
-          hidden = true, -- Show hidden/dot files
-          ignore_patterns = {
-            -- Version control
-            ".git/",
-            ".hg/",
-            ".svn/",
-
-            -- Build outputs
-            "build/",
-            "dist/",
-            "target/",
-
-            -- Dependencies
-            "node_modules/",
-            "vendor/",
-
-            -- Cache directories
-            ".cache/",
-
-            -- Package manager files
-            "package-lock.json",
-            "yarn.lock",
-            "poetry.lock",
-
-            -- Environment files
-            ".env",
-            ".env.*",
-
-            -- IDE and editor files
-            ".idea/",
-            ".vscode/",
-            "*.swp",
-            "*.swo",
-
-            -- OS files
-            ".DS_Store",
-            "Thumbs.db",
-          },
-          git_ignore = true,
+          hidden = true,
         },
-      },
-      layout = {
-        cycle = true,
-        preset = function()
-          return vim.o.columns >= 120 and "default" or "vertical"
-        end,
+        explorer = {
+          hidden = true,
+        },
+        grep = {
+          hidden = true,
+        },
       },
       matcher = {
         fuzzy = true,
@@ -71,10 +40,13 @@ return {
         cwd_bonus = false,
         frecency = false,
       },
+      toggles = {
+        hidden = { icon = "h", value = true },
+        ignored = { icon = "i", value = false },
+      },
       win = {
         input = {
           keys = {
-            -- Movement keys
             ["j"] = { "list_down", mode = { "n" } },
             ["k"] = { "list_up", mode = { "n" } },
             ["<Down>"] = { "list_down", mode = { "n", "i" } },
@@ -83,15 +55,12 @@ return {
             ["<C-k>"] = { "list_up", mode = { "n", "i" } },
             ["<C-n>"] = { "list_down", mode = { "n", "i" } },
             ["<C-p>"] = { "list_up", mode = { "n", "i" } },
-            -- Window focus toggle
             ["/"] = { "toggle_focus", mode = { "n", "i" } },
-            -- Other keys including hidden toggle
             ["<a-h>"] = { "toggle_hidden", mode = { "i", "n" } },
           },
         },
         list = {
           keys = {
-            -- Movement keys
             ["j"] = "list_down",
             ["k"] = "list_up",
             ["<Down>"] = "list_down",
@@ -100,11 +69,28 @@ return {
             ["<C-k>"] = "list_up",
             ["<C-n>"] = "list_down",
             ["<C-p>"] = "list_up",
-            -- Window focus toggle
             ["/"] = "toggle_focus",
           },
         },
       },
     },
+  },
+  keys = {
+    {
+      "<leader>fe",
+      function()
+        Snacks.explorer({ cwd = LazyVim.root() })
+      end,
+      desc = "Explorer Snacks (root dir)",
+    },
+    {
+      "<leader>fE",
+      function()
+        Snacks.explorer()
+      end,
+      desc = "Explorer Snacks (cwd)",
+    },
+    { "<leader>e", "<leader>fe", desc = "Explorer Snacks (root dir)", remap = true },
+    { "<leader>E", "<leader>fE", desc = "Explorer Snacks (cwd)", remap = true },
   },
 }
