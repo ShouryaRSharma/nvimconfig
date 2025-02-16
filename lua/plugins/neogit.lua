@@ -7,4 +7,7 @@ return {
     "nvim-telescope/telescope.nvim", -- optional
   },
   config = true,
+  opts = {
+    graph_style = "kitty",
+  },
 }
