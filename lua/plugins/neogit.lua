@@ -9,5 +9,6 @@ return {
   config = true,
   opts = {
     graph_style = "kitty",
+    process_spinner = true,
   },
 }
