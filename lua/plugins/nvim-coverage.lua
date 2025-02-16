@@ -27,6 +27,15 @@ return {
     dependencies = {
       "nvim-neotest/neotest-python",
     },
+    opts = {
+      adapters = {
+        ["neotest-python"] = {
+          dap = {
+            justMyCode = false,
+          },
+        },
+      },
+    },
     keys = {
       {
         "<leader>tT",
@@ -51,7 +60,7 @@ return {
           if is_python_environment() then
             neotest.run.run({
               extra_args = {
-                "--cov",
+                "--cov=.",
                 "--cov-report=term-missing",
                 "--cov-config=" .. vim.fn.expand("~/.config/nvim/coverage.rc"),
               },

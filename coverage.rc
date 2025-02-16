@@ -1,2 +1,7 @@
 [run]
-omit = */nvim/lazy/neotest-python/*
+omit =
+    */nvim/lazy/neotest-python/*
+    */venv/*
+    .venv/*
+    */virtualenv/*
+    tests/*
