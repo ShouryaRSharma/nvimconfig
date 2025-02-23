@@ -3,6 +3,12 @@ return {
   priority = 1000,
   lazy = false,
   opts = {
+    terminal = {
+      enabled = true,
+      win = {
+        position = "float",
+      },
+    },
     scroll = { enabled = false },
     bigfile = { enabled = true },
     dashboard = { enabled = true },
