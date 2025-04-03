@@ -8,6 +8,11 @@ local function clear_whitespace()
   vim.cmd(":nohl")
 end
 
+local function clear_comments()
+  vim.cmd(":%s/\\s*#.*$//e")
+  vim.cmd(":nohl")
+end
+
 local keymap = vim.keymap
 
 -- Add Neogit keymap
@@ -33,6 +38,10 @@ keymap.set("n", "<leader>ct", function()
 end, { desc = "Toggle coverage" })
 
 -- Keymap to clear trailing whitespaces
-keymap.set("n", "<leader>z", function()
+keymap.set("n", "<leader>zw", function()
   clear_whitespace()
 end, { desc = "Clear trailing whitespaces" })
+
+keymap.set("n", "<leader>zc", function()
+  clear_comments()
+end, { desc = "Clear comments" })
