@@ -36,6 +36,11 @@ return {
       end
       return "[" .. table.concat(buf_client_names, ", ") .. "]"
     end
+
+    -- Set globalstatus to false to show statusline only in active window
+    opts.options = opts.options or {}
+    opts.options.globalstatus = false
+
     opts.sections = opts.sections or {}
     opts.sections.lualine_x = opts.sections.lualine_x or {}
     table.insert(opts.sections.lualine_x, {
