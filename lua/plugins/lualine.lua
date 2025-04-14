@@ -1,7 +1,7 @@
 return {
   "nvim-lualine/lualine.nvim",
   event = "VeryLazy",
-  opts = function(_, opts)
+  config = function(_, opts)
     local function lsp_name()
       local msg = "No Active Lsp"
       local buf_clients = vim.lsp.get_clients({ bufnr = 0 })
@@ -37,17 +37,45 @@ return {
       return "[" .. table.concat(buf_client_names, ", ") .. "]"
     end
 
-    -- Set globalstatus to false to show statusline only in active window
-    opts.options = opts.options or {}
-    opts.options.globalstatus = false
+    -- Create a custom setup for lualine
+    local lualine = require("lualine")
 
-    opts.sections = opts.sections or {}
-    opts.sections.lualine_x = opts.sections.lualine_x or {}
-    table.insert(opts.sections.lualine_x, {
-      lsp_name,
-      color = { gui = "bold" },
+    -- Define custom configuration
+    local config = {
+      options = {
+        globalstatus = false,
+        theme = "auto",
+        disabled_filetypes = {
+          statusline = { "Avante", "AvanteSelectedFiles" },
+          winbar = { "Avante", "AvanteSelectedFiles" },
+        },
+      },
+      sections = {
+        lualine_x = {
+          {
+            lsp_name,
+            color = { gui = "bold" },
+          },
+        },
+      },
+    }
+
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = { "Avante", "AvanteSelectedFiles" },
+      callback = function()
+        vim.opt_local.laststatus = 0 -- Hide statusline completely
+      end,
     })
-    opts.theme = "auto"
-    return opts
+
+    vim.api.nvim_create_autocmd("BufLeave", {
+      callback = function()
+        if vim.bo.filetype == "Avante" or vim.bo.filetype == "AvanteSelectedFiles" then
+          vim.opt.laststatus = 2 -- Show statusline (default)
+        end
+      end,
+    })
+
+    -- Setup lualine with our config
+    lualine.setup(config)
   end,
 }

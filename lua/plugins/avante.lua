@@ -5,11 +5,12 @@ return {
   version = false, -- Set this to "*" to always pull the latest release version, or set it to false to update to the latest code changes.
   opts = {
     provider = "vertex",
+    auto_suggestions_provider = "vertex",
     vertex = {
       endpoint = "https://LOCATION-aiplatform.googleapis.com/v1/projects/PROJECT_ID/locations/LOCATION/publishers/google/models",
       model = "gemini-2.0-flash-001",
       timeout = 30000,
-      temperature = 0,
+      temperature = 0.5,
       max_tokens = 8012,
     },
   },
