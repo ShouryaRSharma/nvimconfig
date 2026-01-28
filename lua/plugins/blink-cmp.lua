@@ -44,16 +44,40 @@ return {
 
       ["<Tab>"] = {
         function(cmp)
-          return cmp.select_next()
+          -- 1. Snippets first
+          if cmp.snippet_active() then
+            return cmp.snippet_forward()
+          end
+
+          -- 2. Sidekick next edit suggestion
+          local ok, sidekick = pcall(require, "sidekick")
+          if ok and sidekick.nes_jump_or_apply() then
+            return true
+          end
+
+          -- 3. Neovim native inline completions
+          if vim.lsp.inline_completion and vim.lsp.inline_completion.get() then
+            vim.lsp.inline_completion.accept()
+            return true
+          end
+
+          -- 4. Normal menu navigation
+          if cmp.is_menu_visible() then
+            return cmp.select_next()
+          end
         end,
-        "snippet_forward",
         "fallback",
       },
+
       ["<S-Tab>"] = {
         function(cmp)
-          return cmp.select_prev()
+          if cmp.snippet_active() then
+            return cmp.snippet_backward()
+          end
+          if cmp.is_menu_visible() then
+            return cmp.select_prev()
+          end
         end,
-        "snippet_backward",
         "fallback",
       },
 

@@ -3,6 +3,7 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
+        marksman = {},
         jdtls = {
           -- Disable formatting capability for jdtls
           on_attach = function(client, bufnr)
@@ -34,7 +35,7 @@ return {
     },
   },
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     opts = function(_, opts)
       opts.ensure_installed = opts.ensure_installed or {}
       -- Add basedpyright to Mason's auto-install list
