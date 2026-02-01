@@ -44,26 +44,29 @@ return {
 
       ["<Tab>"] = {
         function(cmp)
-          -- 1. Snippets first
+          -- 1. Try Sidekick Edit Suggestions First
+          local ok, sidekick = pcall(require, "sidekick")
+          if ok then
+            -- We call the function and check if it successfully handled the keypress
+            if sidekick.nes_jump_or_apply() then
+              return true
+            end
+          end
+
+          -- 2. If no edit, handle Snippets
           if cmp.snippet_active() then
             return cmp.snippet_forward()
           end
 
-          -- 2. Sidekick next edit suggestion
-          local ok, sidekick = pcall(require, "sidekick")
-          if ok and sidekick.nes_jump_or_apply() then
-            return true
+          -- 3. If no snippet, handle the Completion Menu
+          if cmp.is_menu_visible() then
+            return cmp.select_next()
           end
 
-          -- 3. Neovim native inline completions
+          -- 4. Native Inline completions (Ghost text)
           if vim.lsp.inline_completion and vim.lsp.inline_completion.get() then
             vim.lsp.inline_completion.accept()
             return true
-          end
-
-          -- 4. Normal menu navigation
-          if cmp.is_menu_visible() then
-            return cmp.select_next()
           end
         end,
         "fallback",
