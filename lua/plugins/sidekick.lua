@@ -1,19 +1,37 @@
+-- lua/plugins/sidekick.lua
 return {
   "folke/sidekick.nvim",
+  event = "VeryLazy", -- Crucial: loads the plugin so it can "watch" for edits
   opts = {
     cli = {
       mux = {
         enabled = true,
-        backend = "tmux", -- Changed from zellij to tmux
-        create = "split", -- Opens the AI CLI in a split pane
+        backend = "tmux",
+        create = "split",
         split = {
-          size = 0.33, -- Takes up 33% of the screen
+          size = 0.33,
         },
       },
     },
   },
   keys = {
-    -- <Tab> is still handled by blink.cmp, so it remains removed here
+    -- APPLY SUGGESTION (Normal Mode)
+    {
+      "<Tab>",
+      function()
+        local nes = require("sidekick.nes")
+        if nes.have() then
+          nes.apply()
+        else
+          -- Fallback: if no suggestion, act like a normal Tab
+          local key = vim.api.nvim_replace_termcodes("<Tab>", true, false, true)
+          vim.api.nvim_feedkeys(key, "n", false)
+        end
+      end,
+      mode = "n",
+      desc = "Sidekick: Apply Edit Suggestion",
+    },
+    -- CLI TOGGLES
     {
       "<c-.>",
       function()
@@ -77,9 +95,9 @@ return {
     {
       "<leader>ac",
       function()
-        require("sidekick.cli").toggle({ name = "claude", focus = true })
+        require("sidekick.cli").toggle({ name = "opencode", focus = true })
       end,
-      desc = "Sidekick Toggle Claude",
+      desc = "Sidekick Toggle OpenCode",
     },
   },
 }

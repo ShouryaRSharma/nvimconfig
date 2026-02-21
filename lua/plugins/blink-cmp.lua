@@ -44,13 +44,13 @@ return {
 
       ["<Tab>"] = {
         function(cmp)
-          -- 1. Try Sidekick Edit Suggestions First
-          local ok, sidekick = pcall(require, "sidekick")
-          if ok then
-            -- We call the function and check if it successfully handled the keypress
-            if sidekick.nes_jump_or_apply() then
-              return true
-            end
+          -- 1. Try Sidekick Next Edit Suggestions (NES)
+          local ok, nes = pcall(require, "sidekick.nes")
+          if ok and nes.have() then
+            -- This handles the ghost text in your screenshot
+            nes.jump()
+            nes.apply()
+            return true
           end
 
           -- 2. If no edit, handle Snippets
